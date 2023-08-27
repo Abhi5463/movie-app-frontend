@@ -26,7 +26,7 @@ function Register() {
         navigate('/');
         return;
       }
-    }, [userId]);
+    }, [userId, dispatch, navigate]);
 
 
   const handleRegister = async (e) => {
