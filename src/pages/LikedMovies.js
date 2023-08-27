@@ -26,7 +26,7 @@ console.log('liked', likedMovies);
     <div className="movie-list-container">
       <h2>Liked Movies</h2>
       <div className="movie-list">
-        {likedMovies.map(movie => (
+        {likedMovies?.map(movie => (
           <MovieCard key={movie._id} movie={movie} showBtns={false}/>
         ))}
       </div>

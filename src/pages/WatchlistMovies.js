@@ -26,7 +26,7 @@ console.log('Watchlist', watchlistMovies);
     <div className="movie-list-container">
       <h2>Watchlist Movies</h2>
       <div className="movie-list">
-        {watchlistMovies.map(movie => (
+        {watchlistMovies?.map(movie => (
           <MovieCard key={movie._id} movie={movie} showBtns={false}/>
         ))}
       </div>

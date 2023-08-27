@@ -25,7 +25,7 @@ function Login() {
       navigate('/');
       return;
     }
-  }, [userId]);
+  }, [userId, dispatch, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();

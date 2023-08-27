@@ -14,20 +14,18 @@ function MovieForm() {
   });
 
   useEffect(() => {
-    // Fetch the movie details if editing an existing movie
+    const fetchMovieDetails = async () => {
+      try {
+        const response = await getMovieById(movieId);
+        setMovieData(response.data);
+      } catch (error) {
+        console.error('Error fetching movie details:', error);
+      }
+    };
     if (movieId) {
       fetchMovieDetails();
     }
   }, [movieId]);
-
-  const fetchMovieDetails = async () => {
-    try {
-      const response = await getMovieById(movieId);
-      setMovieData(response.data);
-    } catch (error) {
-      console.error('Error fetching movie details:', error);
-    }
-  };
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;

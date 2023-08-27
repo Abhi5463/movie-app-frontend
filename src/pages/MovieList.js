@@ -33,8 +33,18 @@ useEffect(() => {
 }, [dispatch]);
 
   const debouncedFetchMovies = useMemo(() => {
+    async function fetchMovies(query = '') {
+      try {
+        const response = await getMovies(query);
+        setMovies(response.data);
+        dispatch(setMovies(response.data));
+      } catch (error) {
+        console.error('Error fetching movies:', error);
+      }
+    }
+
     return debounce((query) => fetchMovies(query), 500);
-  }, []);
+  }, [dispatch]);
   
   console.log("sorting movies by:" + sortCriteria);
   useEffect(() => {
@@ -48,23 +58,13 @@ useEffect(() => {
     return () => {
       debouncedFetchMovies.cancel();
     };
-  }, [userId, searchQuery, debouncedFetchMovies, sortCriteria]);
+  }, [userId, searchQuery, debouncedFetchMovies, sortCriteria, navigate]);
 
 
   const handleInputChange = (event) => {
     const { value } = event.target;
     setSearchQuery(value);
   };
-
-  async function fetchMovies(query = '') {
-    try {
-      const response = await getMovies(query);
-      setMovies(response.data);
-      dispatch(setMovies(response.data));
-    } catch (error) {
-      console.error('Error fetching movies:', error);
-    }
-  }
 
   const handleSort = () => {
     if (sortCriteria === 'title') {
