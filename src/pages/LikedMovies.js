@@ -1,27 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import { getLikedMovies } from '../api'; 
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import MovieCard from '../components/MovieCard';
+import { getLikedMovies } from '../api';
+import { likeMovie as likeMovieAction } from '../store/UserSlice';
 
 function LikedMovies() {
-  const userId = useSelector(state => state.user.userId);
-//   const token = useSelector(state => state.user.token);
-  const [likedMovies, setLikedMovies] = useState([]);
-
+  const dispatch = useDispatch();
+  const userId = useSelector((state)=> state.user.userId);
   useEffect(() => {
+    console.log("use effect was triggered!!!!!!!!!!!!!!!!")
     async function fetchLikedMovies() {
       try {
         const response = await getLikedMovies(userId);
-        console.log(response);
-        setLikedMovies(response.data.likedMovies);
+        dispatch(likeMovieAction(response.data.likedMovies));
       } catch (error) {
         console.error('Error fetching liked movies:', error);
       }
     }
-
     fetchLikedMovies();
-  }, [userId]);
-console.log('liked', likedMovies);
+  }, [userId, dispatch]);
+const likedMovies = useSelector(state => state.user.likedMovies);
+// console.log('liked', likedMovies);
   return (
     <div className="movie-list-container">
       <h2>Liked Movies</h2>

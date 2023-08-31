@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { getMovies } from '../api';
+import { getMovies, getLikedMovies, getWatchlist } from '../api';
 import MovieCard from '../components/MovieCard'; 
 import './MovieList.css'; 
 import debounce from "lodash.debounce";
@@ -9,7 +9,7 @@ import { setMovies } from '../store/MovieSlice';
 import { setUser, clearUser } from '../store/UserSlice';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPowerOff } from '@fortawesome/free-solid-svg-icons';
-
+import { likeMovie as likeMovieAction, watchlistMovies as watchlistMoviesAction } from '../store/UserSlice';
 
 function MovieList() {
   // const [movies, setMovies] = useState([]);
@@ -48,19 +48,42 @@ useEffect(() => {
   
   console.log("sorting movies by:" + sortCriteria);
   useEffect(() => {
-    console.log("useEffect triggered");
+    // console.log("useEffect triggered");
     if (!userId) {
       navigate('/login');
       return;
     }
-
     debouncedFetchMovies(searchQuery);
     return () => {
       debouncedFetchMovies.cancel();
     };
   }, [userId, searchQuery, debouncedFetchMovies, sortCriteria, navigate]);
 
+  useEffect(() => {
+    console.log("use effect was triggered!!!!!!!!!!!!!!!!")
+    async function fetchLikedMovies() {
+      try {
+        const response = await getLikedMovies(userId);
+        dispatch(likeMovieAction(response.data.likedMovies));
+      } catch (error) {
+        console.error('Error fetching liked movies:', error);
+      }
+    }
 
+    async function fetchWatchlistMovies() {
+      try {
+        const response = await getWatchlist(userId);
+        // console.log("response data",response.data);
+        dispatch(watchlistMoviesAction(response.data.watchlist));
+      } catch (error) {
+        console.error('Error fetching watchlist movies:', error);
+      }
+    }
+
+    fetchWatchlistMovies();
+    fetchLikedMovies();
+  }, [userId, dispatch]);
+  
   const handleInputChange = (event) => {
     const { value } = event.target;
     setSearchQuery(value);
@@ -86,7 +109,7 @@ useEffect(() => {
     navigate('/login'); 
   };
   
-console.log(movies, "movies");
+// console.log(movies, "movies");
   return (
     <div className="movie-list-container">
       <div className= "header">

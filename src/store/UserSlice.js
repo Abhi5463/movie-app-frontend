@@ -5,6 +5,8 @@ export const userSlice = createSlice({
     initialState: {
         userId: null,
         token: null,
+        likedMovies:[],
+        watchlistedMovies:[]
     },
     reducers: {
         setUser: (state, action) => {
@@ -15,9 +17,18 @@ export const userSlice = createSlice({
             state.userId = null;
             state.token = null;
         },
+        likeMovie: (state, action) => {
+            const movies = action.payload;
+            // console.log("payload is :", movies);
+            state.likedMovies = movies;
+        },
+        watchlistMovies: (state, action) => {
+            const movies = action.payload;
+            state.watchlistedMovies = movies;
+        }
     },
 });
 
-export const { setUser, clearUser } = userSlice.actions;
+export const { setUser, clearUser, likeMovie, watchlistMovies } = userSlice.actions;
 
 export default userSlice.reducer;
